@@ -55,7 +55,12 @@ typedef     value_cell<double>          DoubleCell;
 typedef     value_cell<std::string>     SymbolCell;
 
 
-
+/**
+ * class cons pair
+ * a cons pair is in the form of (x . y)
+ * where x & y can be either basic values
+ * or cons pair
+ */
 class ConsCell: public Cell {
 public:
     typedef     std::shared_ptr<Cell>   cell_ptr;

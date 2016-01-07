@@ -61,18 +61,29 @@ static bool is_double(const string& elem) {
 
 static cell_ptr _parse(const vector<string>& tokens, vector<string>::const_iterator& it);
 
+/** 
+ * parse the tail of a cons pair
+ * \param it, iterator points to the first unparsed token in tokens
+ */
 static cell_ptr _parse_tail(const vector<string>& tokens, vector<string>::const_iterator& it) {
+    // first token is car
     cell_ptr my_car = _parse(tokens, it);
     if (*it == ")") {
+        // if next token is ")", then cdr is nil
         ++it;
         return cons(my_car, nil);
     }
     else {
+        // else the cdr is another tail of cons pair
         cell_ptr my_cdr = _parse_tail(tokens, it);
         return cons(my_car, my_cdr);
     }
 }
 
+/**
+ * parse tokens into one s-expression
+ * param it, iterator points to the first unparsed token in tokens
+ */
 static cell_ptr _parse(const vector<string>& tokens, vector<string>::const_iterator& it) {
     if (*it == "(") {
         return _parse_tail(tokens, ++it);

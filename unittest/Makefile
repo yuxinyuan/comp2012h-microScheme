@@ -8,7 +8,7 @@ BINARY_FILES := $(basename $(CPP_CODE_FILES))
 #RUN_OUTPUT_FILES := $(addsuffix .out,$(BINARY_FILES))
 
 #Default Flags
-CXXFLAGS = -std=c++11 -Wall -Werror -Wextra -pedantic -Wno-unused-parameter -g -DDEBUG
+CXXFLAGS = -std=c++11 -Wall -Werror -Wextra -pedantic -g -DDEBUG
 
 .PHONY: all
 .SUFFIXES:
