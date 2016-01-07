@@ -67,11 +67,23 @@ static cell_ptr _parse(const vector<string>& tokens, vector<string>::const_itera
  */
 static cell_ptr _parse_tail(const vector<string>& tokens, vector<string>::const_iterator& it) {
     // first token is car
+    if (*it == ")") {
+        ++it;
+        return nil;
+    }
     cell_ptr my_car = _parse(tokens, it);
     if (*it == ")") {
         // if next token is ")", then cdr is nil
         ++it;
         return cons(my_car, nil);
+    }
+    else if (*it == ".") {
+        cell_ptr my_cdr = _parse(tokens, ++it);
+        if (*it != ")") {
+            throw runtime_error("invalid s-expression");
+        }
+        ++it;
+        return cons(my_car, my_cdr);
     }
     else {
         // else the cdr is another tail of cons pair

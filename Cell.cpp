@@ -33,18 +33,25 @@ string ConsCell::type() const {
 string ConsCell::to_str() const {
     stringstream ss;
     cell_ptr curr = car_m;
-    cons_ptr next = cdr_m && cdr_m->type() == "cons" ? static_pointer_cast<ConsCell>(cdr_m) : nullptr;
+    cell_ptr next = cdr_m;
     ss << "(";
     do {
         ss << curr->to_str();
-        curr = next ? next->get_car() : nullptr;
-        next = next && next->get_cdr() && (next->get_cdr())->type() == "cons" ? 
-                static_pointer_cast<ConsCell>(next->get_cdr()) : nullptr;
-        if (curr) {
+        if (next->type() == "cons") {
             ss << " ";
+            curr = (static_pointer_cast<ConsCell>(next))->get_car();
+            next = (static_pointer_cast<ConsCell>(next))->get_cdr();
         }
-    } while (curr);
-    ss << ")";
+        else if (next->type() != "nil") {
+            ss << " . " << next->to_str() << ")";
+            break;
+        }
+        else {
+            ss << ")";
+            break;
+        }
+    } while (true);
+
     return ss.str();
 }
 
@@ -64,3 +71,31 @@ cell_ptr ConsCell::get_car() const {
 cell_ptr ConsCell::get_cdr() const {
     return cdr_m;
 }
+
+/**************************************************************
+ ******************* class NilCell ****************************
+ *************************************************************/
+int NilCell::instance_count = 0;
+
+NilCell::NilCell() {
+    if (instance_count == 0) {
+        ++instance_count;
+    }
+    else {
+        throw logic_error("try to create another instance of nil");
+    }
+}
+
+string NilCell::type() const {
+    return "nil";
+}
+
+string NilCell::to_str() const {
+    return "()";
+}
+
+unsigned int NilCell::length() const {
+    throw logic_error("try to access length() method of nil");
+}
+
+shared_ptr<Cell> nil(new NilCell);

@@ -3,8 +3,9 @@
 
 #include "Cell.h"
 
-#define nil nullptr
+//#define nil nullptr
 typedef std::shared_ptr<Cell> cell_ptr;
+extern cell_ptr nil;
 
 /****************************************************************
  ***********************make cells*******************************

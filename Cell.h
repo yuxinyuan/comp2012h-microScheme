@@ -82,4 +82,26 @@ private:
     cell_ptr cdr_m;
 };
 
+/**
+ * class NilCell
+ * nil class only have one instance
+ * represent nil in scm
+ */
+class NilCell: public Cell {
+public:
+    NilCell();
+    NilCell(const NilCell& c) = delete;
+    virtual ~NilCell() {}
+    NilCell& operator=(const NilCell& c) = delete;
+
+    virtual std::string type() const;
+    virtual std::string to_str() const;
+    virtual unsigned int length() const;
+
+private:
+    static int instance_count;
+};
+
+extern std::shared_ptr<Cell> nil;
+
 #endif // _CELL_H_
