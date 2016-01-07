@@ -68,7 +68,7 @@ inline bool nullp(cell_ptr c)
  */
 inline bool intp(cell_ptr c)
 {
-    return !nullp(c) && c->type() == "int";
+    return c->type() == "int";
 }
 
 /**
@@ -77,7 +77,7 @@ inline bool intp(cell_ptr c)
  */
 inline bool doublep(cell_ptr c)
 {
-    return !nullp(c) && c->type() == "double";
+    return c->type() == "double";
 }
 
 /**
@@ -86,7 +86,7 @@ inline bool doublep(cell_ptr c)
  */
 inline bool symbolp(cell_ptr c)
 {
-    return !nullp(c) && c->type() == "symbol";
+    return c->type() == "symbol";
 }
 
 /**
@@ -95,7 +95,7 @@ inline bool symbolp(cell_ptr c)
  */
 inline bool listp(cell_ptr c)
 {
-    return !nullp(c) && c->type() == "cons";
+    return c->type() == "cons";
 }
 
 

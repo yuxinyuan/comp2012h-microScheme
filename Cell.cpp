@@ -27,7 +27,12 @@ typedef     shared_ptr<Cell>        cell_ptr;
 typedef     shared_ptr<ConsCell>    cons_ptr;
 
 string ConsCell::type() const {
-    return "cons";
+    if (cdr_m->type() == "cons" || cdr_m->type() == "nil") {
+        return "cons";
+    }
+    else {
+        return "pair";
+    }
 }
 
 string ConsCell::to_str() const {
@@ -56,8 +61,11 @@ string ConsCell::to_str() const {
 }
 
 unsigned int ConsCell::length() const {
-    if (cdr_m && cdr_m->type() == "cons") {
+    if (cdr_m->type() == "cons") {
         return 1 + cdr_m->length();
+    }
+    else if (cdr_m->type() != "nil") {
+        throw logic_error("try to access length() method of non-list type");
     }
     else {
         return 1;
