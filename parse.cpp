@@ -100,6 +100,10 @@ static cell_ptr _parse(const vector<string>& tokens, vector<string>::const_itera
     if (*it == "(") {
         return _parse_tail(tokens, ++it);
     }
+    else if (*it == "'") {
+        cell_ptr ret = _parse(tokens, ++it);
+        return cons(make_symbol("quote"), cons(ret, nil));
+    }
     else if (is_int(*it)) {
         cell_ptr ret = make_int(stoi(*it));
         ++it;
