@@ -53,7 +53,7 @@ private:
 typedef     value_cell<int>             IntCell;
 typedef     value_cell<double>          DoubleCell;
 typedef     value_cell<std::string>     SymbolCell;
-
+typedef     value_cell<bool>            BoolCell;
 
 /**
  * class cons pair

@@ -6,19 +6,19 @@ using namespace std;
  ******************* class value_cell *************************
  *************************************************************/
 template <>
-string value_cell<int>::type() const {
-    return "int";
-}
+string value_cell<int>::type() const { return "int"; }
 
 template <>
-string value_cell<double>::type() const {
-    return "double";
-}
+string value_cell<double>::type() const { return "double"; }
 
 template <>
-string value_cell<string>::type() const {
-    return "symbol";
-}
+string value_cell<string>::type() const { return "symbol"; }
+
+template<>
+string value_cell<bool>::type() const { return "boolean"; }
+
+template<>
+string value_cell<bool>::to_str() const { return value_m ? "#t" : "#f"; }
 
 /**************************************************************
  ******************* class ConsCell ***************************

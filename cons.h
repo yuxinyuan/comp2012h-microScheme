@@ -48,6 +48,14 @@ inline cell_ptr cons(cell_ptr my_car, cell_ptr my_cdr)
     return cell_ptr(new ConsCell(my_car, my_cdr));
 }
 
+/**
+ * \brief Make a boolean cell.
+ * \param b The initial boolean to be stored in the new cell.
+ */
+inline cell_ptr make_bool(const bool b)
+{
+    return cell_ptr(new BoolCell(b));
+}
 
 /****************************************************************
  ********************check cell type*****************************
@@ -98,6 +106,14 @@ inline bool listp(cell_ptr c)
     return c->type() == "cons";
 }
 
+/**
+ * \brief Check if c points to a boolean cell.
+ * \return True iff c points to a boolean cell.
+ */
+inline bool boolp(cell_ptr c)
+{
+    return c->type() == "boolean";
+}
 
 /****************************************************************
  ***************************getter*******************************
@@ -161,6 +177,18 @@ inline cell_ptr cdr(cell_ptr c)
         throw std::runtime_error(c->to_str() + "is not of type cons");
     }
     return (std::static_pointer_cast<ConsCell>(c))->get_cdr();
+}
+
+/**
+ * \brief Accessor (error if c is not a boolean cell).
+ * \return The bool value in the boolean cell pointed to by c.
+ */
+inline bool get_bool(cell_ptr c)
+{
+    if (!boolp(c)) {
+        throw std::runtime_error(c->to_str() + "is not of type boolean");
+    }
+    return (std::static_pointer_cast<BoolCell>(c))->get_value();
 }
 
 #endif // _CONS_H_
