@@ -59,6 +59,19 @@ static bool is_double(const string& elem) {
     return true;
 }
 
+static bool is_bool(const string& elem) {
+    return elem == "#t" || elem == "#f" || elem == "#T" || elem == "#F";
+}
+
+/**
+ * convert boolean str to c++ boolean value
+ * no error check
+ */
+static bool stob(const string& elem) {
+    if (elem == "#t" || elem == "#T") { return true; }
+    else { return false; }
+}
+
 static cell_ptr _parse(const vector<string>& tokens, vector<string>::const_iterator& it);
 
 /** 
@@ -114,6 +127,11 @@ static cell_ptr _parse(const vector<string>& tokens, vector<string>::const_itera
         ++it;
         return ret;
     }
+    else if (is_bool(*it)) {
+        cell_ptr ret = make_bool(stob(*it));
+        ++it;
+        return ret;
+    }
     else if (*it == ")") {
         throw runtime_error("invalid token ')'");
     }
@@ -128,10 +146,24 @@ cell_ptr parse(const vector<string>& tokens) {
     auto it = tokens.begin();
     cell_ptr ret = _parse(tokens, it);
     if (it != tokens.end()) {
-        throw runtime_error("invalid s-expression");
+        throw runtime_error("invalid s-expression or more than one s-expression");
     }
     else {
         return ret;
+    }
+}
+
+static int read_console(string& sexpr) {
+    getline(cin, sexpr);
+    if (cin.eof()) {
+        cout << endl;
+        throw logic_error("keyboard interrupt");
+    }
+    else if (sexpr.empty()) {
+        return -1;
+    }
+    else {
+        return 0;
     }
 }
 
@@ -139,36 +171,51 @@ cell_ptr parse(const vector<string>& tokens) {
  * tokenize sexpr, push the parsed tokens to the tokens vector
  * \param count, count the unmatch parentheses
  */
-static int expr_to_vector(const string& sexpr, vector<string>& tokens, int count) {
+static int expr_to_vector(string& sexpr, vector<string>& tokens, int count) {
     auto it = sexpr.begin();
-    auto extract_elem = [&]() ->string {
-                            if (*it == '(') {
-                                ++it;
-                                return "(";
-                            }
-                            else if (*it == ')') {
-                                ++it;
-                                return ")";
-                            }
-                            auto start = it;
-                            while (it != sexpr.end() && isspace(*it) == 0) {
-                                if (*it == '(') {
-                                    return string(start, it);
-                                }
-                                else if (*it == ')') {
-                                    return string(start, it);
-                                }
-                                else {
-                                    ++it;
-                                }
-                            }
-                            return string(start, it);
-                        };
-
+    auto extract_string = [&]() ->string {
+        auto start = it;
+        string ret;
+        do {
+            ++it;
+            if (it == sexpr.end()) {
+                ret += string(start, it);
+                read_console(sexpr);
+                start = it = sexpr.begin();
+            }
+        } while (*it != '"');
+        // add tail to resutl
+        ++it;
+        ret += string(start, it);
+        return ret;
+    };
+    auto extract_token = [&]() ->string {
+        auto start = it;
+        if (*it == '(' || *it == ')' || *it == '\'') {
+            ++it;
+            return string(start, it);
+        }
+        else {
+            while (it != sexpr.end() && isspace(*it) == 0) {
+                if (*it == '(' || *it == ')') {
+                    return string(start, it);
+                }
+                else {
+                    ++it;
+                }
+            }
+            return string(start, it);
+        }
+    };
     string elem;
     while (it != sexpr.end()) {
         if (isspace(*it) == 0) {
-            elem = extract_elem();
+            if (*it == '"') {
+                elem = extract_string();
+            }
+            else {
+                elem = extract_token();
+            }
             if (elem == "(") {
                 ++count;
             }
@@ -189,12 +236,11 @@ vector<string> read_expr() {
     string sexpr;
     vector<string> ret;
     do {
-        getline(cin, sexpr);
-        if (cin.eof()) {
-            cout << endl;
-            throw logic_error("keyboard interrupt");
+        if (read_console(sexpr) != -1 && *(sexpr.begin()) != ';') {
+            // if expression on console is not null and not comment
+            // tokenize the s-expression
+            count = expr_to_vector(sexpr, ret, count);
         }
-        count = expr_to_vector(sexpr, ret, count);
     } while (count != 0);
     return ret;
 }

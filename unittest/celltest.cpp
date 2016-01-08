@@ -7,6 +7,9 @@ int main() {
     shared_ptr<Cell> i = make_int(10);
     shared_ptr<Cell> d = make_double(1.2);
     shared_ptr<Cell> s = make_symbol("hello");
+    shared_ptr<Cell> b = make_bool(true);
+
+    cout << boolp(b) << " " << get_bool(b) << " " << b->to_str() << endl;
 
     cout << intp(i) << " " << get_int(i) << endl;
     cout << doublep(d) << " " << get_double(d) << endl;
