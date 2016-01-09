@@ -9,6 +9,8 @@ CXXFLAGS = -std=c++11 -Wall -Werror -Wextra -pedantic -g -DDEBUG
 
 all: build cleanobj
 
+debug: build
+
 build: scm
 
 scm: $(CPP_OBJ_FILES)

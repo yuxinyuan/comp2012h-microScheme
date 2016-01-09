@@ -12,9 +12,11 @@ void read_eval_print() {
         try {
             cout << "scm> ";
             tokens = read_expr();
-            root = parse(tokens);
-            result = eval(root);
-            cout << result->to_str() << endl;
+            if (!tokens.empty()) {
+                root = parse(tokens);
+                result = eval(root);
+                cout << result->to_str() << endl;
+            }
         }
         catch (runtime_error& e) {
             cout << "ERROR: " << e.what() << endl;

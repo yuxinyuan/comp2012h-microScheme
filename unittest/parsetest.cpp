@@ -11,6 +11,10 @@ void read_eval_print() {
         try {
             cout << "scm> ";
             tokens = read_expr();
+            for (auto it=tokens.begin(); it != tokens.end(); ++it) {
+                cout << *it << " ";
+            }
+            cout << endl;
             if (!tokens.empty()) {
                 root = parse(tokens);
                 cout << root->to_str() << endl;
