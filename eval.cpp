@@ -33,6 +33,10 @@ static void check_formals(cell_ptr formals, cell_ptr args) {
             throw runtime_error(err_msg.str());
         }
     }
+    else if (symbolp(formals) && (listp(args) || nullp(args))) {
+        // arbitary number of arguments
+        return;
+    }
     else if (nullp(formals) && nullp(args)) {
         return;
     }
@@ -104,6 +108,12 @@ static cell_ptr _eval(cell_ptr c, frame_ptr env) {
                     args = eval_args(args, env);
                     frame_ptr new_frame = frame::make_new_frame(formals, args, get_env(car_cell));
                     return begin_syntax(get_body(car_cell), new_frame);
+                }
+                else if (primitivep(car_cell)) {
+                    cell_ptr args = cdr(c);
+                    check_formals(make_symbol("args"), args);
+                    args = eval_args(args, env);
+                    return get_func(car_cell)(args);
                 }
                 else {
                     throw runtime_error(car(c)->to_str() + " is not a function");

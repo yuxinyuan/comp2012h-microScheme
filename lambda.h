@@ -57,4 +57,38 @@ inline frame_ptr get_env(cell_ptr c) {
     return (std::static_pointer_cast<ProcedureCell>(c))->get_env();
 }
 
+typedef     decltype(cell_ptr (*)(cell_ptr))    func_t;
+
+class PrimitiveCell: public Cell {
+public:
+    PrimitiveCell() = delete;
+    PrimitiveCell(func_t func): func_m(func) {}
+    PrimitiveCell(const PrimitiveCell& c) = delete;
+    virtual ~PrimitiveCell() {}
+    PrimitiveCell& operator=(const PrimitiveCell& c) = delete;
+
+    virtual std::string type() const;
+    virtual std::string to_str() const;
+    virtual unsigned int length() const;
+
+    func_t get_func() const;
+private:
+    func_t func_m;
+};
+
+inline bool primitivep(cell_ptr c) {
+    return c->type() == "primitive";
+}
+
+inline cell_ptr make_func(func_t f) {
+    return cell_ptr(new PrimitiveCell(f));
+}
+
+inline func_t get_func(cell_ptr c) {
+    if (!primitivep(c)) {
+        throw std::runtime_error(c->to_str() + " is not of type primitive");
+    }
+    return (std::static_pointer_cast<PrimitiveCell>(c))->get_func();
+}
+
 #endif // _LAMBDA_H_

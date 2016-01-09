@@ -39,11 +39,16 @@ frame_ptr frame::make_new_frame(cell_ptr formals, cell_ptr args, frame_ptr paren
 }
 
 void frame::_bind_vars(cell_ptr formals, cell_ptr args, frame_ptr f) {
+    if (symbolp(formals)) {
+        f->define(get_symbol(formals), args);
+        return;
+    }
     while (!nullp(formals)) {
         f->define(get_symbol(car(formals)), car(args));
         formals = cdr(formals);
         args = cdr(args);
     }
+    return;
 }
 
 map_iter frame::_look_up(string name) {
