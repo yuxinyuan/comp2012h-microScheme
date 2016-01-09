@@ -12,6 +12,44 @@
 
 using namespace std;
 
+static cell_ptr _eval(cell_ptr c, frame_ptr env);
+
+/**
+ * check if both formals and args are of type list
+ * and both formals and args have the same length
+ * throw runtime_error on failure
+ */
+static void check_formals(cell_ptr formals, cell_ptr args) {
+    if (listp(formals) && listp(args)) {
+        unsigned int formals_length = formals->length();
+        unsigned int args_length = args->length();
+
+        if (formals_length == args_length) {
+            return;
+        }
+        else {
+            stringstream err_msg;
+            err_msg << "expect " << formals_length << " but receive " << args_length;
+            throw runtime_error(err_msg.str());
+        }
+    }
+    else if (nullp(formals) && nullp(args)) {
+        return;
+    }
+    else {
+        throw runtime_error("formals and args must both be lists");
+    }
+}
+
+static cell_ptr eval_args(cell_ptr args, frame_ptr env) {
+    if (nullp(args)) {
+        return nil;
+    }
+    else {
+        return cons(_eval(car(args), env), eval_args(cdr(args), env));
+    }
+}
+
 static cell_ptr _eval(cell_ptr c, frame_ptr env) {
     auto get_value = [&](cell_ptr cp) ->cell_ptr {
         // get value of a primitive type cell
@@ -60,7 +98,11 @@ static cell_ptr _eval(cell_ptr c, frame_ptr env) {
             else {
                 car_cell = get_value(car_cell);
                 if (procedurep(car_cell)) {
-                    frame_ptr new_frame = frame::make_new_frame(get_formals(car_cell), cdr(c), get_env(car_cell));
+                    cell_ptr args = cdr(c);
+                    cell_ptr formals = get_formals(car_cell);
+                    check_formals(formals, args);
+                    args = eval_args(args, env);
+                    frame_ptr new_frame = frame::make_new_frame(formals, args, get_env(car_cell));
                     return begin_syntax(get_body(car_cell), new_frame);
                 }
                 else {

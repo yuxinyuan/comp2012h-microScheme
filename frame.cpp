@@ -38,35 +38,7 @@ frame_ptr frame::make_new_frame(cell_ptr formals, cell_ptr args, frame_ptr paren
     return ret;
 }
 
-/**
- * check if both formals and args are of type list
- * and both formals and args have the same length
- * throw runtime_error on failure
- */
-static void check_formals(cell_ptr formals, cell_ptr args) {
-    if (listp(formals) && listp(args)) {
-        unsigned int formals_length = formals->length();
-        unsigned int args_length = args->length();
-
-        if (formals_length == args_length) {
-            return;
-        }
-        else {
-            stringstream err_msg;
-            err_msg << "expect " << formals_length << " but receive " << args_length;
-            throw runtime_error(err_msg.str());
-        }
-    }
-    else if (nullp(formals) && nullp(args)) {
-        return;
-    }
-    else {
-        throw runtime_error("formals and args must both be lists");
-    }
-}
-
 void frame::_bind_vars(cell_ptr formals, cell_ptr args, frame_ptr f) {
-    check_formals(formals, args);
     while (!nullp(formals)) {
         f->define(get_symbol(car(formals)), car(args));
         formals = cdr(formals);
