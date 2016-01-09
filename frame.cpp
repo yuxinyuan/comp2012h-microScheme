@@ -15,13 +15,7 @@ frame::frame(): parent_m(nullptr) {}
 frame::frame(frame_ptr f): parent_m(f) {}
 
 cell_ptr frame::look_up(std::string name) {
-    map_iter result = _look_up(name);
-    if (result != bindings.end()) {
-        return result->second;
-    }
-    else {
-        return nullptr;
-    }
+    return (_look_up(name))->second;
 }
 
 void frame::define(string name, cell_ptr value) {
@@ -29,13 +23,7 @@ void frame::define(string name, cell_ptr value) {
 }
 
 void frame::set(string name, cell_ptr value) {
-    map_iter search = _look_up(name);
-    if (search != bindings.end()) {
-        search->second = value;
-    }
-    else {
-        throw runtime_error("name " + name + " does not exist in current environment");
-    }
+    (_look_up(name))->second = value;
 }
 
 frame_ptr frame::make_new_frame(cell_ptr formals, cell_ptr args, frame_ptr parent) {
@@ -73,7 +61,7 @@ static void check_formals(cell_ptr formals, cell_ptr args) {
         return;
     }
     else {
-        throw runtime_error("formals and args must be lists");
+        throw runtime_error("formals and args must both be lists");
     }
 }
 
@@ -97,7 +85,7 @@ map_iter frame::_look_up(string name) {
             return parent_m->_look_up(name);
         }
         else {
-            return bindings.end();
+            throw runtime_error("name " + name + " does not exist in current environment");
         }
     }
 }

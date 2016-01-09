@@ -125,7 +125,7 @@ inline bool boolp(cell_ptr c)
 inline int get_int(cell_ptr c)
 {
     if (!intp(c)) {
-        throw std::runtime_error(c->to_str() + "is not of type int");
+        throw std::runtime_error(c->to_str() + " is not of type int");
     }
     return (std::static_pointer_cast<IntCell>(c))->get_value();
 }
@@ -137,7 +137,7 @@ inline int get_int(cell_ptr c)
 inline double get_double(cell_ptr c)
 {
     if (!doublep(c)) {
-        throw std::runtime_error(c->to_str() + "is not of type double");
+        throw std::runtime_error(c->to_str() + " is not of type double");
     }
     return (std::static_pointer_cast<DoubleCell>(c))->get_value();
 }
@@ -150,7 +150,7 @@ inline double get_double(cell_ptr c)
 inline std::string get_symbol(cell_ptr c)
 {
     if (!symbolp(c)) {
-        throw std::runtime_error(c->to_str() + "is not of type symbol");
+        throw std::runtime_error(c->to_str() + " is not of type symbol");
     }
     return (std::static_pointer_cast<SymbolCell>(c))->get_value();
 }
@@ -162,7 +162,7 @@ inline std::string get_symbol(cell_ptr c)
 inline cell_ptr car(cell_ptr c)
 {
     if (!listp(c)) {
-        throw std::runtime_error(c->to_str() + "is not of type cons");
+        throw std::runtime_error(c->to_str() + " is not of type cons");
     }
     return (std::static_pointer_cast<ConsCell>(c))->get_car();
 }
@@ -174,7 +174,7 @@ inline cell_ptr car(cell_ptr c)
 inline cell_ptr cdr(cell_ptr c)
 {
     if (!listp(c)) {
-        throw std::runtime_error(c->to_str() + "is not of type cons");
+        throw std::runtime_error(c->to_str() + " is not of type cons");
     }
     return (std::static_pointer_cast<ConsCell>(c))->get_cdr();
 }
@@ -186,7 +186,7 @@ inline cell_ptr cdr(cell_ptr c)
 inline bool get_bool(cell_ptr c)
 {
     if (!boolp(c)) {
-        throw std::runtime_error(c->to_str() + "is not of type boolean");
+        throw std::runtime_error(c->to_str() + " is not of type boolean");
     }
     return (std::static_pointer_cast<BoolCell>(c))->get_value();
 }

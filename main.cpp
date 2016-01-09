@@ -15,7 +15,9 @@ void read_eval_print() {
             if (!tokens.empty()) {
                 root = parse(tokens);
                 result = eval(root);
-                cout << result->to_str() << endl;
+                if (result != nil) {
+                   cout << result->to_str() << endl;
+                }
             }
         }
         catch (runtime_error& e) {

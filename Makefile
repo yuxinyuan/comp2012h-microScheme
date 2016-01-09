@@ -7,9 +7,7 @@ CXXFLAGS = -std=c++11 -Wall -Werror -Wextra -pedantic -g -DDEBUG
 
 .PHONY: all clean
 
-all: build cleanobj
-
-debug: build
+all: build 
 
 build: scm
 
@@ -20,11 +18,8 @@ scm: $(CPP_OBJ_FILES)
 	@echo "Building $@"
 	g++ $< -c -o $@ $(CXXFLAGS)
 
-clean: cleanobj
+clean: 
 	-rm -f scm
-
-.PHONY: cleanobj
-cleanobj:
 	-rm -rf *.o
 
 run: scm

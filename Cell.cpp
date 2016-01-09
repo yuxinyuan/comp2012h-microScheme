@@ -103,7 +103,8 @@ string NilCell::to_str() const {
 }
 
 unsigned int NilCell::length() const {
-    throw logic_error("try to access length() method of nil");
+    //throw logic_error("try to access length() method of nil");
+    return 0;
 }
 
 shared_ptr<Cell> nil(new NilCell);
