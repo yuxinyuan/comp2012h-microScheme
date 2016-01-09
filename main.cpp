@@ -1,5 +1,6 @@
 #include "parse.h"
 #include "eval.h"
+#include "scmlib.h"
 #include <iostream>
 
 using namespace std;
@@ -32,6 +33,7 @@ void read_eval_print() {
 }
 
 int main() {
+    register_primitive_function();
     read_eval_print();
     return 0;
 }

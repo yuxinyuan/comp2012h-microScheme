@@ -57,7 +57,7 @@ inline frame_ptr get_env(cell_ptr c) {
     return (std::static_pointer_cast<ProcedureCell>(c))->get_env();
 }
 
-typedef     decltype(cell_ptr (*)(cell_ptr))    func_t;
+typedef     cell_ptr (* func_t)(cell_ptr);
 
 class PrimitiveCell: public Cell {
 public:

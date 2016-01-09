@@ -2,10 +2,6 @@
 
 using namespace std;
 
-typedef     std::shared_ptr<Cell>               cell_ptr;
-typedef     std::shared_ptr<frame>              frame_ptr;
-typedef     decltype(cell_ptr (*)(cell_ptr))    func_t;
-
 ProcedureCell::ProcedureCell(cell_ptr formals, cell_ptr body, frame_ptr env):
     formals_m(formals), body_m(body), env_m(env)
 {}
