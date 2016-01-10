@@ -1,15 +1,19 @@
-CPP_CODE_FILES := $(wildcard *.cpp)
+CPP_CODE_FILES := $(wildcard src/*.cpp)
+DEBUG_CPP_OBJ_FILES := $(addsuffix .d.o,$(basename $(CPP_CODE_FILES)))
 CPP_OBJ_FILES := $(addsuffix .o,$(basename $(CPP_CODE_FILES)))
-H_FILES := $(wildcard *.h)
+H_FILES := $(wildcard include/*.h)
 
 #Default Flags
-CXXFLAGS = -std=c++11 -Wall -Werror -Wextra -pedantic -g -DDEBUG
-
-.PHONY: all clean
+CFLAGS = -Iinclude/
+DEBUGS = -g -DDEBUG
+CXXFLAGS = -Wall -Werror -Wextra -pedantic -std=c++11 $(CFLAGS)
 
 all: build 
 
 build: scm
+
+debug: $(DEBUG_CPP_OBJ_FILES)
+	g++ $(DEBUG_CPP_OBJ_FILES) -o scm
 
 scm: $(CPP_OBJ_FILES)
 	g++ $(CPP_OBJ_FILES) -o scm
@@ -18,9 +22,12 @@ scm: $(CPP_OBJ_FILES)
 	@echo "Building $@"
 	g++ $< -c -o $@ $(CXXFLAGS)
 
+%.d.o: %.cpp $(H_FILES)
+	@echo "Building $@"
+	g++ $< -c -o $@ $(DEBUGS) $(CXXFLAGS)
+
 clean: 
 	-rm -f scm
-	-rm -rf *.o
+	-rm -rf $(CPP_OBJ_FILES) $(DEBUG_CPP_OBJ_FILES)
 
-run: scm
-	./scm
+.PHONY: all clean
