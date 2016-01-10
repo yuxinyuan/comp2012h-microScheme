@@ -28,7 +28,8 @@ scm: $(CPP_OBJ_FILES)
 
 clean: cleantest
 	-rm -f scm
-	-rm -rf $(CPP_OBJ_FILES) $(DEBUG_CPP_OBJ_FILES)
+	-rm -rf $(CPP_OBJ_FILES) 
+	-rm -rf $(DEBUG_CPP_OBJ_FILES)
 
 unittest:
 	$(MAKE) -C unittest/

@@ -110,12 +110,20 @@ static cell_ptr _parse_tail(const vector<string>& tokens, vector<string>::const_
  * param it, iterator points to the first unparsed token in tokens
  */
 static cell_ptr _parse(const vector<string>& tokens, vector<string>::const_iterator& it) {
-    if (*it == "(") {
+    if (it == tokens.end()) {
+        return nil;
+    }
+    else if (*it == "(") {
         return _parse_tail(tokens, ++it);
     }
     else if (*it == "'") {
         cell_ptr ret = _parse(tokens, ++it);
-        return cons(make_symbol("quote"), cons(ret, nil));
+        if (ret != nil) {
+            return cons(make_symbol("quote"), cons(ret, nil));            
+        }
+        else {
+            return make_symbol("quote");
+        }
     }
     else if (is_int(*it)) {
         cell_ptr ret = make_int(stoi(*it));
