@@ -118,12 +118,7 @@ static cell_ptr _parse(const vector<string>& tokens, vector<string>::const_itera
     }
     else if (*it == "'") {
         cell_ptr ret = _parse(tokens, ++it);
-        if (ret != nil) {
-            return cons(make_symbol("quote"), cons(ret, nil));            
-        }
-        else {
-            return make_symbol("quote");
-        }
+        return cons(make_symbol("quote"), cons(ret, nil));            
     }
     else if (is_int(*it)) {
         cell_ptr ret = make_int(stoi(*it));
