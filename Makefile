@@ -26,8 +26,14 @@ scm: $(CPP_OBJ_FILES)
 	@echo "Building $@"
 	g++ $< -c -o $@ $(DEBUGS) $(CXXFLAGS)
 
-clean: 
+clean: cleantest
 	-rm -f scm
 	-rm -rf $(CPP_OBJ_FILES) $(DEBUG_CPP_OBJ_FILES)
 
-.PHONY: all clean
+unittest:
+	$(MAKE) -C unittest/
+
+cleantest:
+	$(MAKE) -C unittest/ clean
+
+.PHONY: all clean unittest cleantest
