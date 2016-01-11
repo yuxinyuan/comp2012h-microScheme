@@ -1,5 +1,8 @@
 #include "frame.h"
 #include <utility>
+#ifdef DEBUG
+    #include <iostream>
+#endif
 
 using namespace std;
 
@@ -14,11 +17,24 @@ frame::frame(): parent_m(nullptr) {}
 
 frame::frame(frame_ptr f): parent_m(f) {}
 
+frame::~frame() {
+#ifdef DEBUG
+    cout << "@@@@@@@@@@@@@@@deleted local frame@@@@@@@@@@@@@@@@@@@" << endl;
+    for (auto it = bindings.begin(); it != bindings.end(); ++it) {
+        cout << it->first << ": " << it->second->to_str() << endl;
+    }
+    cout << "@@@@@@@@@@@@@@@deleted local frame@@@@@@@@@@@@@@@@@@@" << endl;
+#endif
+}
+
 cell_ptr frame::look_up(std::string name) {
     return (_look_up(name))->second;
 }
 
 void frame::define(string name, cell_ptr value) {
+#ifdef DEBUG
+    cout << "defining: " << name << ": " << value->to_str() << endl;
+#endif
     bindings[name] = value;
 }
 
@@ -33,7 +49,7 @@ frame_ptr frame::make_new_frame(cell_ptr formals, cell_ptr args, frame_ptr paren
      * this will mess up reference count!
      * frame_ptr parent_m = shared_from_this();
      */
-    frame_ptr ret(parent);
+    frame_ptr ret(new frame(parent));
     _bind_vars(formals, args, ret);
     return ret;
 }

@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include "cons.h"
 
-class frame: public std::enable_shared_from_this<frame> {
+class frame {
 public:
     typedef     std::shared_ptr<frame>                      frame_ptr;
     typedef     std::shared_ptr<Cell>                       cell_ptr;
@@ -15,7 +15,7 @@ public:
     frame(frame_ptr f);
     frame(const frame& f) = delete;
     frame& operator=(const frame& f) = delete;
-    ~frame() {}
+    ~frame();
 
     cell_ptr look_up(std::string name);
     /**
