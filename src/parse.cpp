@@ -36,6 +36,14 @@ static bool is_double(const string& elem) {
         // length of double must be greater than one.
         return false;
     }
+    else if (*it == '-' || *it == '+') {
+        if (elem.length() == 2) {
+            return false;
+        }
+        else {
+            ++it;
+        }
+    }
     bool dot = false;
     while (it != it_end) {
         if (isdigit(*it) == 0 && *it != '.') {
