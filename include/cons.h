@@ -98,12 +98,21 @@ inline bool symbolp(cell_ptr c)
 }
 
 /**
- * \brief Check if c points to a list (i.e., nil or a cons cell).
- * \return True iff c points to a list (i.e., nil or a cons cell).
+ * \brief Check if c points to a list
+ * \return True iff c points to a list
  */
 inline bool listp(cell_ptr c)
 {
     return c->type() == "cons";
+}
+
+/**
+ * \brief Check if c points to a pair
+ * \return True iff c points to a pair
+ */
+inline bool pairp(cell_ptr c)
+{
+    return c->type() == "pair";
 }
 
 /**
@@ -161,7 +170,7 @@ inline std::string get_symbol(cell_ptr c)
  */
 inline cell_ptr car(cell_ptr c)
 {
-    if (!listp(c)) {
+    if (!(listp(c) || pairp(c))) {
         throw std::runtime_error(c->to_str() + " is not of type cons");
     }
     return (std::static_pointer_cast<ConsCell>(c))->get_car();
@@ -173,7 +182,7 @@ inline cell_ptr car(cell_ptr c)
  */
 inline cell_ptr cdr(cell_ptr c)
 {
-    if (!listp(c)) {
+    if (!(listp(c) || pairp(c))) {
         throw std::runtime_error(c->to_str() + " is not of type cons");
     }
     return (std::static_pointer_cast<ConsCell>(c))->get_cdr();

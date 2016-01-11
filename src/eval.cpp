@@ -2,6 +2,7 @@
 #include "frame.h"
 #include "lambda.h"
 #include "syntax.h"
+#include "debug.h"
 
 // return second element of a list e.g. y for (x y z)
 #define cadr(c) car(cdr(c))
@@ -54,7 +55,38 @@ static cell_ptr eval_args(cell_ptr args, frame_ptr env) {
     }
 }
 
+cell_ptr function_call(cell_ptr func, cell_ptr args) {
+    if (procedurep(func)) {
+        cell_ptr formals = get_formals(func);
+        frame_ptr new_frame = frame::make_new_frame(formals, args, get_env(func));
+        return begin_syntax(get_body(func), new_frame);
+    }
+    else {
+        return get_func(func)(args);
+    }
+}
+
+static cell_ptr _function_call(cell_ptr func, cell_ptr args, frame_ptr env) {
+    if (procedurep(func)) {
+        cell_ptr formals = get_formals(func);
+        check_formals(formals, args);
+        args = eval_args(args, env);
+        __debug(args);
+        return function_call(func, args);
+    }
+    else if (primitivep(func)) {
+        check_formals(make_symbol("args"), args);
+        args = eval_args(args, env);
+        __debug(args);
+        return function_call(func, args);
+    }
+    else {
+        throw runtime_error(func->to_str() + " is not a function");
+    }
+}
+
 static cell_ptr _eval(cell_ptr c, frame_ptr env) {
+    __debug(c);
     auto get_value = [&](cell_ptr cp) ->cell_ptr {
         // get value of a primitive type cell
         if (nullp(cp) || intp(cp) || doublep(cp) || boolp(cp)) { return cp; }
@@ -100,24 +132,7 @@ static cell_ptr _eval(cell_ptr c, frame_ptr env) {
                 return quote_syntax(cdr(c));
             }
             else {
-                car_cell = get_value(car_cell);
-                if (procedurep(car_cell)) {
-                    cell_ptr args = cdr(c);
-                    cell_ptr formals = get_formals(car_cell);
-                    check_formals(formals, args);
-                    args = eval_args(args, env);
-                    frame_ptr new_frame = frame::make_new_frame(formals, args, get_env(car_cell));
-                    return begin_syntax(get_body(car_cell), new_frame);
-                }
-                else if (primitivep(car_cell)) {
-                    cell_ptr args = cdr(c);
-                    check_formals(make_symbol("args"), args);
-                    args = eval_args(args, env);
-                    return get_func(car_cell)(args);
-                }
-                else {
-                    throw runtime_error(car(c)->to_str() + " is not a function");
-                }
+                return _function_call(get_value(car_cell), cdr(c), env);
             }
         }
         else {
