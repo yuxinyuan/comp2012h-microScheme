@@ -217,13 +217,13 @@ static cell_ptr is_number(cell_ptr args) {
 
 static cell_ptr scm_car(cell_ptr args) {
     scm_assert(args->length() == 1, "car expect 1 argument");
-    scm_assert(listp(car(args)), "invalid operand for car");
+    scm_assert(listp(car(args)) || pairp(car(args)), "invalid operand for car");
     return car(car(args));
 }
 
 static cell_ptr scm_cdr(cell_ptr args) {
     scm_assert(args->length() == 1, "cdr expect 1 argument");
-    scm_assert(listp(car(args)), "invalid operand for cdr");
+    scm_assert(listp(car(args)) || pairp(car(args)), "invalid operand for cdr");
     return cdr(car(args));
 }
 

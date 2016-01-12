@@ -30,8 +30,15 @@ void read_eval_print() {
     } while (true); 
 }
 
+void read_lib() {
+    return;
+}
+
 int main() {
+    // register standard scm library functions
     register_primitive_function();
+    // read .scm files in scmlib/
+    read_lib();
     read_eval_print();
     return 0;
 }
